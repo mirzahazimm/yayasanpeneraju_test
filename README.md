@@ -1,5 +1,5 @@
 # ETL & Data Pipeline with Airflow and Python
-
+PLEASE READ Setup_and_Run_with_Design.pdf
 ## 📖 Overview
 This project implements a simplified ETL pipeline that:
 1. **Extracts** daily sales CSVs from a GCS bucket  
