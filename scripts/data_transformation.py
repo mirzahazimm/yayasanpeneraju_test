@@ -4,7 +4,7 @@ import pandas as pd
 def transform_data(local_file_path):
     try:
         # Make sure the file path is correct for local testing
-        file_path = os.path.join(local_file_path, 'sales_data_sample.csv')
+        file_path = os.path.join(local_file_path, 'sales_data_sample.csv') #from data/sales_data_sample.csv
         
         # Read the CSV file into a DataFrame with specified encoding
         df = pd.read_csv(file_path, encoding='ISO-8859-1')
