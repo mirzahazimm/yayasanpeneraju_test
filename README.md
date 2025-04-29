@@ -15,8 +15,9 @@ All steps are orchestrated in an Airflow DAG (`dags/etl_pipeline.py`) scheduled 
 
 1. **Docker & Docker Compose** installed (v20+).  
 2. A **Google Cloud service-account JSON** key with Storage Object Viewer permissions.  
-3. A local folder for your GCS key (e.g. `~/keys/etl-gcs.json`).  
-4. A `.env` file in the project root, containing:
+3. A local folder for your GCS key (e.g. `~/keys/etl-gcs.json`).
+4. GCS key will be shared personally.
+5. A `.env` file in the project root, containing:
    ```dotenv
    AIRFLOW_UID=50000
    AIRFLOW_IMAGE_NAME=yayasanpeneraju_test
