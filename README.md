@@ -18,7 +18,12 @@ All steps are orchestrated in an Airflow DAG (`dags/etl_pipeline.py`) scheduled 
 3. A local folder for your GCS key (e.g. `~/keys/etl-gcs.json`).  
 4. A `.env` file in the project root, containing:
    ```dotenv
+   AIRFLOW_UID=50000
+   AIRFLOW_IMAGE_NAME=yayasanpeneraju_test
+   AIRFLOW_WWW_USER_USERNAME=yayasanpeneraju
+   AIRFLOW_WWW_USER_PASSWORD=yayasanpeneraju
    POSTGRES_USER=yayasanpeneraju
    POSTGRES_PASSWORD=yayasanpeneraju
    POSTGRES_DB=yayasanpeneraju
-   AIRFLOW_IMAGE_NAME=apache/airflow:2.5.1
+   REDIS_PASSWORD=yayasanpeneraju
+
