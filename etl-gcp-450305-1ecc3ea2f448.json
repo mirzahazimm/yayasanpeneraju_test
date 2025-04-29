@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "etl-gcp-450305",
+  "private_key_id": "1ecc3ea2f448fa93b62edc4ef4335b35cbcd7ad7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCPqYCVZGvhUiMr\nEi4r9SmmXPFESTYZQSV1Ny3mqxnjkOQ+23UhhgCbvriUjf6PceqaRxo/owCG02Bg\nsdOGDL2PnFzPZvyMecAMJbaKtXrW8tZseJe5G/ohzHmsjmvetRz9vtetvhuWiPvc\nCFwTlsLIfMzJrY/0MMuDmXxFXGzxQna+zh2YK8u5y4kHlG95bCW7B0dhf1OwUub8\nl73V1UfAQzu0JXRUdUSzER6IPgI1olCH+V2WNhbhLFsfWoaZp+mYyWh4HtdRuxw9\nuLzPc2MP50IjV9AchFwKH5d0yTKl5BcLEMGlGbSlrNZvxANMjTRl7tLRjxIlv2D4\nFK83uNXPAgMBAAECggEAFcprcJLnh36CoG6E27IM0T6Dx2HQzN/ZeKrCpvGztEAu\nqWzMRXt37X0ZA594yfVI1SyNH13wHy3suSiqoZ3zxYFoKnq/5Tw1FHfxSko2Cb3n\n0agxC1ONC0INVU59BNjf6YqLAxWKRbkddXCR1tQlU20VUE9Sky2GO73fiv3L9dlu\n0AnpBuTJDz0hnxFz4FW7mh+xBi7ItR39c+3EKU+xF+fuqgUxBhFjvi1fhb/d0eqv\n5mcSFZfAWWpIp/gAfwgGTBj8Op8cRgVMuF8LzhkiWPBNz3+PzTd0fCmrokcq5Os/\nBfiI3QIdK0oiVsjzVj8KN9nQJwlszduwsAyTs3gLsQKBgQC/zQq2hEI317uq/q0y\n8u1vT62ByMoKgmN42QnfilLKbt66qummwEw+PS6NX8cjSa8LrMdCm4xe5L6Dd2Me\nb1Oh0KhyqFIIhfqUdsfJZ872U4LlstsXbdbb2P3ZJq7q416jxgb3LWd9MCNTrVYO\nI6aW3pI0VkqniMp5FpugfUMPywKBgQC/v4+hFjNehcsaNJHMdGRpeUIZ6heJHhrn\nSDqmb2VPTKl499QUBezsTopUGFMRfRR6Rhiqj0csPQ1jQ53YBqyG2xWI4zNH6G88\nR0PNNbEm/tWr2VWcw2+8bdGN7OzfqjCa2Jz47/iNMm0W2UgvCdVQjnObjuJ09484\nPHfGvVEJjQKBgG4YkaSxCJ2rbSM7a0oKnfY+I1eTXT5pGBY/Z2Z0rQ9cUueNwe8h\nBOLZFca7CsEbw6oM9JgsV4gE/8LRHglTWAtTjc27BtOzrGHaSNY4i1lkGIgngZHS\nT/oEdbpXdSKJf0K9IjRyUKxQnIakwff9yNtjSUNXoSTH5YlaS9z06jC/AoGAbJ7S\neTk/TktSW3zuHrjMbOdQ56cxP+565QuIleHCrSJLWohhbhpRNSfkunCxFdYaNI3i\nyTOy6L+JBvM1xjs5noca8tlpolFsOeRQ5z2EJgfz+I58LfqUIFTBgbl2EdmyAPW2\nLlqaHTo0i934QxU57pFTsgpGBGZ8jinK3B1Ae70CgYBFHciFVjpBdr8jvFyf886e\nuV7gk10icdYrImEHUk8ztBu1G58LhZY1wLfFNA4r9hQdOOX/lXe3AVZ9kE6I3CGS\nMGGs60tQbm+flm4s32gSSgcz13mtAQpyxwBm2hWwNBoSCrkwVgho/Ne6X3kpQpjU\nOp0yIiNMldbAst+AEwzNag==\n-----END PRIVATE KEY-----\n",
+  "client_email": "yayasan-peneraju@etl-gcp-450305.iam.gserviceaccount.com",
+  "client_id": "115541643691821043848",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/yayasan-peneraju%40etl-gcp-450305.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,0 +1,193 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}    # Sourced from .env file
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Sourced from .env file
+      POSTGRES_DB: ${POSTGRES_DB}  # Sourced from .env file
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+
+  redis:
+    image: redis:7.2-bookworm
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 50
+      start_period: 30s
+    restart: always
+
+  airflow-apiserver:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: api-server
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-dag-processor:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: dag-processor
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type DagProcessorJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-worker:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: celery worker
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    environment:
+      AIRFLOW_UID: 50000  # Ensure the AIRFLOW_UID is correctly set
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/gcs_key.json  # Set the key file location
+      AIRFLOW__CORE__EXECUTOR: CeleryExecutor  # Ensure the CeleryExecutor is set
+    restart: always
+    depends_on:
+      airflow-apiserver:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - "C:/Users/User/Documents/Data Analysis Projects/Data Engineering/Yayasan Peneraju Assessment/etl-gcp-450305-1ecc3ea2f448.json:/opt/airflow/gcs_key.json"  # Mount the GCS key json file, need to change based on your local machine
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+
+  airflow-triggerer:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: triggerer
+    healthcheck:
+      test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-init:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        export GOOGLE_APPLICATION_CREDENTIALS="/opt/airflow/gcs_key.json"
+        export AIRFLOW__CORE__SQL_ALCHEMY_CONN="postgresql+psycopg2://yayasanpeneraju:yayasanpeneraju@postgres/yayasanpeneraju"
+        mkdir -p /opt/airflow/{logs,dags,plugins,config}
+        chown -R "${AIRFLOW_UID}:0" /opt/airflow/{logs,dags,plugins,config}
+        exec airflow db upgrade  # Correct database migration command
+    environment:
+      AIRFLOW_UID: 50000  # Ensure the AIRFLOW_UID is correctly set
+    volumes:
+      - "C:/Users/User/Documents/Data Analysis Projects/Data Engineering/Yayasan Peneraju Assessment/etl-gcp-450305-1ecc3ea2f448.json:/opt/airflow/gcs_key.json"
+      - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+      - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+      - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
+      - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+
+  airflow-cli:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    profiles:
+      - debug
+    environment:
+      CONNECTION_CHECK_MAX_COUNT: "0"
+    command:
+      - bash
+      - -c
+      - airflow  # Run arbitrary Airflow CLI commands
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+  flower:
+    image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
+    command: celery flower  # Web UI for Celery
+    profiles:
+      - flower
+    ports:
+      - "5555:5555"
+    # Health check omitted here—Flower has its own UI health endpoint if needed
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+
+volumes:
+  postgres-db-volume:  # Named volume for Postgres data persistence
